@@ -4,12 +4,20 @@ use std::io::BufReader;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct SpotifyListen {
+pub struct SpotifyListen {
     pub ts: String,
-    pub ms_played: i64,
-    pub master_metadata_track_name: Option<String>,
-    pub master_metadata_album_artist_name: Option<String>,
-    pub spotify_track_uri: Option<String>,
+    
+    #[serde(rename = "ms_played")] 
+    pub duration: i64,
+
+    #[serde(rename = "master_metadata_track_name")]
+    pub track: Option<String>,
+
+    #[serde(rename = "master_metadata_album_artist_name")]
+    pub artist: Option<String>,
+
+    #[serde(rename = "spotify_track_uri")]
+    pub uri: Option<String>,
 }
 
 // Command that takes the path of an extended history JSON
