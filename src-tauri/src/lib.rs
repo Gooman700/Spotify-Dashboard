@@ -1,36 +1,7 @@
-use serde::{Deserialize, Serialize};
-use std::fs::File;
-use std::io::BufReader;
+mod models;
+mod commands;
+use commands::import_extended_history::import_extended_history;
 use tauri_plugin_sql::{Migration, MigrationKind};
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct SpotifyListen {
-    pub ts: String,
-    
-    #[serde(rename = "ms_played")] 
-    pub duration: i64,
-
-    #[serde(rename = "master_metadata_track_name")]
-    pub track: Option<String>,
-
-    #[serde(rename = "master_metadata_album_artist_name")]
-    pub artist: Option<String>,
-
-    #[serde(rename = "spotify_track_uri")]
-    pub uri: Option<String>,
-}
-
-// Command that takes the path of an extended history JSON
-// and converts them into the SpotifyListen struct
-#[tauri::command]
-fn import_extended_history(path: String) -> Result<String, String> {
-    let file = File::open(&path).map_err(|e| e.to_string())?;
-    let reader = BufReader::new(file);
-
-    let listens: Vec<SpotifyListen> = serde_json::from_reader(reader).map_err(|e| e.to_string())?;
-
-    Ok(format!("Successfully read {} songs from the file!", listens.len()))
-}
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

@@ -9,13 +9,13 @@ function App() {
   async function handleImport() {
     try {
       const selected = await open({
+        directory: true,
         multiple: false,
-        filters: [{ name: 'JSON', extensions: ['json'] }]
       });
 
       if (selected) {
-        setStatus("Reading file...");
-        const message = await invoke<string>("import_extended_history", { path: selected });
+        setStatus("Reading folder...");
+        const message = await invoke<string>("import_extended_history", { folderPath: selected });
         setStatus(message);
       }
     } catch (err) {
